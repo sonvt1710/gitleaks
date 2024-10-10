@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/zricethezav/gitleaks/v8/cmd/generate/config/base"
 	"os"
 	"text/template"
 
@@ -37,6 +38,7 @@ func main() {
 		rules.Atlassian(),
 		rules.Authress(),
 		rules.AWS(),
+		rules.AzureActiveDirectoryClientSecret(),
 		rules.BitBucketClientID(),
 		rules.BitBucketClientSecret(),
 		rules.BittrexAccessKey(),
@@ -48,6 +50,7 @@ func main() {
 		rules.CloudflareAPIKey(),
 		rules.CloudflareGlobalAPIKey(),
 		rules.CloudflareOriginCAKey(),
+		rules.CohereAPIToken(),
 		rules.ConfluentAccessToken(),
 		rules.ConfluentSecretKey(),
 		rules.Contentful(),
@@ -138,6 +141,7 @@ func main() {
 		rules.NewRelicBrowserAPIKey(),
 		rules.NewRelicInsertKey(),
 		rules.NPM(),
+		rules.NugetConfigPassword(),
 		rules.NytimesAccessToken(),
 		rules.OktaAccessToken(),
 		rules.OpenAI(),
@@ -150,6 +154,7 @@ func main() {
 		rules.PlanetScaleOAuthToken(),
 		rules.PostManAPI(),
 		rules.Prefect(),
+		rules.PrivateAIToken(),
 		rules.PrivateKey(),
 		rules.PulumiAPIToken(),
 		rules.PyPiUploadToken(),
@@ -227,7 +232,9 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to create rules.toml")
 	}
 
-	if err = tmpl.Execute(f, config.Config{Rules: ruleLookUp}); err != nil {
+	cfg := base.CreateGlobalConfig()
+	cfg.Rules = ruleLookUp
+	if err = tmpl.Execute(f, cfg); err != nil {
 		log.Fatal().Err(err).Msg("could not execute template")
 	}
 
